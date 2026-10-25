@@ -69,7 +69,7 @@
       <tr><td class="cat"><span class="dot ${x.rating}"></span>${esc(x.category)}</td>
           <td><span class="${x.missing ? 'missing' : ''}">${esc(x.label)}</span>${x.note ? `<div class="note">${esc(x.note)}</div>` : ''}</td></tr>`).join('');
     tipEl.innerHTML = `
-      <div class="head"><span class="chip ${r.verdict}">${VERDICT_TEXT[r.verdict]}</span>${entry.dotEl.hasAttribute('data-rr-best') ? '<span>★ best on page</span>' : ''}<span class="score">score ${r.score}</span></div>
+      <div class="head"><span class="chip ${r.verdict}">${VERDICT_TEXT[r.verdict]}</span>${entry.dotEl.hasAttribute('data-rr-best') ? '<span>★ best of this title</span>' : ''}<span class="score">score ${r.score}</span></div>
       <div class="name">${esc(entry.name)}</div>
       <table>${rows || '<tr><td class="missing">No rule matched</td></tr>'}</table>
       <div class="profile">Profile: ${esc(profile.name)}</div>`;

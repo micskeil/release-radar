@@ -50,6 +50,6 @@ https://github.com/micskeil/release-radar/blob/main/store/PRIVACY.md
 
 ## Assets checklist
 - [x] Icon 128×128 — icons/icon128.png
-- [ ] Screenshots 1280×800 (1–5) — use store/demo.html (load it after enabling "Allow access to file URLs", or serve it locally)
+- [x] Screenshots 1280×800 — store/screenshots/1-page.png, 2-tooltip.png, 3-setup.png (rendered from store/demo.html)
 - [ ] Small promo tile 440×280 (optional)
 - Wording: keep screenshots and text neutral; no tracker/site names.

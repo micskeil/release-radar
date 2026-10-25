@@ -1,0 +1,41 @@
+:root {
+  --bg: #fafaf9; --panel: #ffffff; --text: #1c1917; --muted: #78716c; --border: #e7e5e4; --hover: #f5f5f4;
+  --accent: #2563eb; --accent-text: #fff;
+  --perfect: #16a34a; --ok: #eab308; --bad: #dc2626;
+  --perfect-soft: #dcfce7; --ok-soft: #fef9c3; --bad-soft: #fee2e2;
+  --mono: ui-monospace, "JetBrains Mono", "Cascadia Code", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0c0a09; --panel: #1c1917; --text: #f5f5f4; --muted: #a8a29e; --border: #292524; --hover: #292524;
+    --accent: #3b82f6; --perfect-soft: #14532d; --ok-soft: #422006; --bad-soft: #450a0a;
+    color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 13px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+a, .link { color: var(--accent); text-decoration: none; cursor: pointer; }
+a:hover { text-decoration: underline; }
+.muted { color: var(--muted); }
+.card { background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
+.field { display: grid; gap: 4px; }
+.field > span { font-size: 12px; color: var(--muted); }
+input[type=text], input:not([type]), select, textarea {
+  font: inherit; color: var(--text); background: var(--panel); border: 1px solid var(--border); border-radius: 6px; padding: 6px 8px; width: 100%;
+}
+textarea { font-family: var(--mono); font-size: 12px; resize: vertical; }
+input:focus, select:focus, textarea:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+.btn { font: inherit; font-weight: 500; border: 1px solid var(--border); background: var(--panel); color: var(--text); border-radius: 6px; padding: 6px 12px; cursor: pointer; }
+.btn:hover { background: var(--hover); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn.danger { color: var(--bad); }
+.btn.small { padding: 2px 8px; font-size: 12px; }
+.pill { display: inline-flex; gap: 4px; align-items: center; padding: 1px 8px; border-radius: 999px; font-size: 12px; }
+.pill.perfect { background: var(--perfect-soft); } .pill.ok { background: var(--ok-soft); } .pill.bad { background: var(--bad-soft); }
+.dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; }
+.dot.perfect { background: var(--perfect); } .dot.ok { background: var(--ok); } .dot.bad { background: var(--bad); }
+.switch { display: flex; gap: 8px; align-items: center; cursor: pointer; }
+.switch input { width: 16px; height: 16px; accent-color: var(--accent); }

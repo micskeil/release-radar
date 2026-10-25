@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Release Radar settings</title>
+  <link rel="stylesheet" href="common.css">
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <aside class="nav">
+    <div class="brand"><img src="../icons/icon48.png" alt="" width="28" height="28"> Release Radar</div>
+    <nav>
+      <a data-tab="setup" class="active">Setup</a>
+      <a data-tab="rules">Rules</a>
+      <a data-tab="test">Test names</a>
+      <a data-tab="sites">Sites</a>
+      <a data-tab="display">Display</a>
+      <a data-tab="backup">Backup</a>
+    </nav>
+    <div class="active-profile">
+      <span class="muted">Active profile</span>
+      <select id="activeProfile"></select>
+    </div>
+    <div id="saved" class="saved" aria-live="polite"></div>
+  </aside>
+
+  <main>
+    <!-- ============================================================ SETUP -->
+    <section id="tab-setup" class="tab">
+      <h1>Describe your setup</h1>
+      <p class="lead">Release Radar marks each release name <span class="pill perfect">green</span> when it is a perfect fit,
+        <span class="pill ok">yellow</span> when it plays but isn't ideal, and <span class="pill bad">red</span> when it won't play properly on your setup.
+        Start from a preset, adjust the answers, and save. You can fine-tune every rule afterwards.</p>
+
+      <h2>Start from a preset</h2>
+      <div id="presets" class="presets"></div>
+
+      <form id="wizard" class="wizard card">
+        <label class="field"><span>Profile name</span><input id="w-name" required></label>
+
+        <fieldset><legend>Screen</legend>
+          <label class="radio"><input type="radio" name="maxRes" value="2160p"> 4K TV or projector</label>
+          <label class="radio"><input type="radio" name="maxRes" value="1080p"> 1080p screen</label>
+        </fieldset>
+
+        <fieldset><legend>HDR</legend>
+          <label class="radio"><input type="radio" name="hdr" value="dv"> Dolby Vision and HDR10 <small>(LG OLED, Sony, Philips, TCL, Hisense…)</small></label>
+          <label class="radio"><input type="radio" name="hdr" value="hdr10"> HDR10 only, no Dolby Vision <small>(Samsung TVs)</small></label>
+          <label class="radio"><input type="radio" name="hdr" value="sdr"> No HDR</label>
+          <label class="check"><input type="checkbox" id="w-dvP7"> My player handles UHD BluRay Dolby Vision (profile 7) <small>(Nvidia Shield, Ugoos, Zidoo)</small></label>
+        </fieldset>
+
+        <fieldset><legend>Sound</legend>
+          <label class="radio"><input type="radio" name="audio" value="ddp-atmos"> Atmos system, but the player only passes <b>DD+ Atmos</b>
+            <small>(Google TV Streamer, Chromecast, Fire TV, Apple TV, TV apps). TrueHD and DTS-HD lose Atmos.</small></label>
+          <label class="radio"><input type="radio" name="audio" value="full-atmos"> Atmos system with <b>full passthrough</b>
+            <small>(Nvidia Shield Pro, Ugoos, Zidoo, HTPC). TrueHD Atmos and DTS:X are ideal.</small></label>
+          <label class="radio"><input type="radio" name="audio" value="surround"> 5.1 / 7.1 surround, no Atmos</label>
+          <label class="radio"><input type="radio" name="audio" value="stereo"> TV speakers, headphones or laptop</label>
+        </fieldset>
+
+        <fieldset><legend>Video codecs</legend>
+          <label class="check"><input type="checkbox" id="w-av1"> My player decodes AV1</label>
+          <label class="check"><input type="checkbox" id="w-hi10"> My player decodes H.264 10-bit <small>(PC / mpv only, rarely TV boxes)</small></label>
+        </fieldset>
+
+        <fieldset><legend>REMUX (untouched disc copies, 30–90 GB)</legend>
+          <label class="radio"><input type="radio" name="remux" value="perfect"> Welcome</label>
+          <label class="radio"><input type="radio" name="remux" value="ok"> Acceptable</label>
+          <label class="radio"><input type="radio" name="remux" value="bad"> Avoid</label>
+        </fieldset>
+
+        <fieldset><legend>Preferred audio languages</legend>
+          <div id="w-langs" class="langs"></div>
+          <label class="check"><input type="checkbox" id="w-requireLang"> Only mark green if a preferred language is in the name</label>
+        </fieldset>
+
+        <fieldset><legend>Release groups</legend>
+          <label class="field"><span>Avoid (comma separated) — marked red</span><textarea id="w-avoid" rows="2"></textarea></label>
+          <label class="field"><span>Trust (comma separated) — ranked higher</span><textarea id="w-prefer" rows="2"></textarea></label>
+        </fieldset>
+
+        <div class="actions">
+          <button type="submit" class="btn primary" id="w-create">Create profile</button>
+          <button type="button" class="btn" id="w-rebuild">Rebuild active profile from these answers</button>
+          <span class="muted small">Rebuilding replaces any rule edits in the active profile.</span>
+        </div>
+      </form>
+    </section>
+
+    <!-- ============================================================ RULES -->
+    <section id="tab-rules" class="tab" hidden>
+      <h1>Rules</h1>
+      <div class="profile-bar card">
+        <label class="field grow"><span>Profile name</span><input id="r-name"></label>
+        <button class="btn" id="r-dup">Duplicate</button>
+        <button class="btn danger" id="r-del">Delete</button>
+      </div>
+      <details class="help card">
+        <summary>How rules work</summary>
+        <ul>
+          <li>Each <b>category</b> is checked on its own. Inside a category the <b>first matching rule wins</b>, so keep specific rules (DDP5.1 Atmos) above general ones (DDP5.1). Drag order with ↑ ↓.</li>
+          <li>Verdict: any category rated <span class="pill bad">red</span> makes the release red. All rated categories <span class="pill perfect">green</span> make it green. Anything else is <span class="pill ok">yellow</span>.</li>
+          <li><b>If not found</b> decides what happens when no rule in the category matches: ignore it, treat as yellow, or treat as red.</li>
+          <li>Patterns: comma separates alternatives. <code>&amp;</code> means all terms must be present, <code>!</code> means must be absent:
+            <code>REMUX &amp; DV</code>, <code>2.0 &amp; !5.1</code>. Separators are loose, so <code>WEB-DL</code> also matches WEBDL, WEB.DL and WEB DL. Case doesn't matter.</li>
+          <li>For anything else, write a regular expression between slashes: <code>/ddp?5\.1/</code>.</li>
+        </ul>
+      </details>
+      <div id="categories"></div>
+      <button class="btn" id="r-addcat">+ Add category</button>
+    </section>
+
+    <!-- ============================================================ TEST -->
+    <section id="tab-test" class="tab" hidden>
+      <h1>Test names</h1>
+      <p class="lead">Paste release names, one per line. Results use the active profile and update as you edit rules.</p>
+      <textarea id="t-input" rows="8" spellcheck="false"></textarea>
+      <div id="t-results" class="results"></div>
+    </section>
+
+    <!-- ============================================================ SITES -->
+    <section id="tab-sites" class="tab" hidden>
+      <h1>Sites</h1>
+      <p class="lead">On any page you can click the toolbar icon and press <b>Scan this page</b>. Sites listed here are scanned automatically on every visit.
+        Chrome asks for permission to read each site once.</p>
+      <form id="s-form" class="row">
+        <input id="s-host" placeholder="example.org">
+        <button class="btn primary">Add site</button>
+      </form>
+      <ul id="s-list" class="sites"></ul>
+    </section>
+
+    <!-- ============================================================ DISPLAY -->
+    <section id="tab-display" class="tab" hidden>
+      <h1>Display</h1>
+      <div class="card stack">
+        <label class="switch"><input type="checkbox" data-display="colorText"> Colour the title text</label>
+        <label class="switch"><input type="checkbox" data-display="showDot"> Coloured dot before the title</label>
+        <label class="switch"><input type="checkbox" data-display="markBest"> Mark the best release of each title: star instead of a dot, blue bar on its row</label>
+        <label class="switch"><input type="checkbox" data-display="tintRows"> Tint the whole table row in the verdict colour</label>
+        <label class="switch"><input type="checkbox" data-display="dimBad"> Fade out red rows</label>
+        <p class="muted small">Hover a marked title to see why it got its colour.</p>
+      </div>
+    </section>
+
+    <!-- ============================================================ BACKUP -->
+    <section id="tab-backup" class="tab" hidden>
+      <h1>Backup and sharing</h1>
+      <p class="lead">Export profiles to share them with friends or move them to another browser.</p>
+      <div class="card stack">
+        <div class="row">
+          <button class="btn" id="b-export-active">Export active profile</button>
+          <button class="btn" id="b-export-all">Export all settings</button>
+          <label class="btn">Import file…<input type="file" id="b-import" accept=".json,application/json" hidden></label>
+        </div>
+        <p class="muted small">Importing a single profile adds it to your list. Importing full settings replaces everything.</p>
+        <hr>
+        <div class="row"><button class="btn danger" id="b-reset">Reset everything to defaults</button></div>
+      </div>
+      <div id="b-msg" class="muted"></div>
+    </section>
+  </main>
+
+  <script src="../src/engine.js"></script>
+  <script src="../src/defaults.js"></script>
+  <script src="../src/settings.js"></script>
+  <script src="options.js"></script>
+</body>
+</html>

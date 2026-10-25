@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Release Radar</title>
+  <link rel="stylesheet" href="../options/common.css">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body class="popup">
+  <header class="bar">
+    <img src="../icons/icon32.png" alt="" width="20" height="20">
+    <strong>Release Radar</strong>
+    <a id="openOptions" class="link" href="#">Settings</a>
+  </header>
+
+  <label class="field">
+    <span>Profile</span>
+    <select id="profile"></select>
+  </label>
+
+  <section id="status" class="card">
+    <div id="statusText" class="muted">Checking this page…</div>
+    <div id="counts" class="counts" hidden>
+      <span class="pill perfect"><b id="cPerfect">0</b> best</span>
+      <span class="pill ok"><b id="cOk">0</b> ok</span>
+      <span class="pill bad"><b id="cBad">0</b> skip</span>
+    </div>
+    <div id="noGreen" class="nogreen" hidden>
+      <strong>No perfect match on this page.</strong> Best per title:
+      <ol id="bestTitles" class="top"></ol>
+    </div>
+    <ol id="top" class="top"></ol>
+    <button id="scan" class="btn primary" hidden>Scan this page</button>
+  </section>
+
+  <label id="autoRow" class="switch" hidden>
+    <input type="checkbox" id="auto">
+    <span>Always scan <b id="host"></b></span>
+  </label>
+
+  <footer class="legend">
+    <span><i class="dot perfect"></i>Best match</span>
+    <span><i class="dot ok"></i>Acceptable</span>
+    <span><i class="dot bad"></i>Don't download</span>
+  </footer>
+  <script src="../src/engine.js"></script>
+  <script src="../src/defaults.js"></script>
+  <script src="../src/settings.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

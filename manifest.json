@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "Release Radar",
+  "short_name": "Release Radar",
+  "version": "1.0.0",
+  "description": "Colour-codes video release names on any page by how well their video and audio formats fit your own player, TV and sound system.",
+  "icons": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png", "128": "icons/icon128.png" },
+  "action": {
+    "default_title": "Release Radar",
+    "default_popup": "popup/popup.html",
+    "default_icon": { "16": "icons/icon16.png", "32": "icons/icon32.png" }
+  },
+  "options_page": "options/options.html",
+  "background": { "service_worker": "src/background.js" },
+  "permissions": ["storage", "activeTab", "scripting"],
+  "optional_host_permissions": ["*://*/*"],
+  "minimum_chrome_version": "102"
+}

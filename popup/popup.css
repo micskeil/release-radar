@@ -1,0 +1,15 @@
+body.popup { width: 340px; padding: 12px; margin: 0; display: grid; gap: 10px; }
+.bar { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+.bar .link { margin-left: auto; }
+.counts { display: flex; gap: 6px; margin: 6px 0 2px; }
+.top { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 4px; }
+.top li { display: flex; gap: 6px; align-items: flex-start; cursor: pointer; padding: 4px 6px; border-radius: 6px; }
+.top li:hover { background: var(--hover); }
+.top .name { font: 11px/1.35 var(--mono); word-break: break-all; }
+.top .dot { flex: none; margin-top: 3px; }
+.legend { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); }
+#scan { width: 100%; margin-top: 8px; }
+.nogreen { margin-top: 8px; padding: 8px; border-left: 4px solid #2563eb; border-radius: 6px; background: rgba(37, 99, 235, 0.08); font-size: 12px; }
+.nogreen .title { font-weight: 600; font-size: 12px; }
+.nogreen .why { font-size: 11px; color: var(--muted); }
+.nogreen li { flex-direction: column; gap: 1px; }

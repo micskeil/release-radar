@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "PlayFit – Release Format Checker",
   "short_name": "PlayFit",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "See at a glance whether a video release’s resolution, HDR and audio formats suit your TV, player and sound system.",
   "icons": { "16": "icons/icon16.png", "32": "icons/icon32.png", "48": "icons/icon48.png", "128": "icons/icon128.png" },
   "action": {

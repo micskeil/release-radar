@@ -31,10 +31,12 @@ FEATURES
 • Works on tables, lists and grids, and never inserts anything into the page
 
 RELEASE NOTES
+1.0.4
+• New setup question: home server (Jellyfin, Plex, Emby) that direct-plays makes Dolby Vision-only releases a perfect fit
+
 1.0.3
 • Choose which pages of a site are scanned automatically. Open a page, click the toolbar icon, pick “Only pages like this one” and tick the parts of the address that must match
 • See and remove a site’s page rules right in the toolbar popup
-• New setup question: home server (Jellyfin, Plex, Emby) that direct-plays makes Dolby Vision-only releases a perfect fit
 
 1.0.2
 • New icon

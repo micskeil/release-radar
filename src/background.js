@@ -11,7 +11,7 @@ async function syncRegistrations() {
   if (existing.length) await chrome.scripting.unregisterContentScripts({ ids: [SCRIPT_ID] });
   if (!matches.length) return;
   await chrome.scripting.registerContentScripts([{
-    id: SCRIPT_ID, matches, js: FILES, css: ['src/content.css'], runAt: 'document_idle', allFrames: false, persistAcrossSessions: true,
+    id: SCRIPT_ID, matches, js: [...FILES.slice(0, -1), 'src/auto.js', FILES[FILES.length - 1]], css: ['src/content.css'], runAt: 'document_idle', allFrames: false, persistAcrossSessions: true,
   }]);
 }
 

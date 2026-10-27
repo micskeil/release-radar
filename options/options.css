@@ -69,7 +69,11 @@ select.rating-bad { border-left: 4px solid var(--bad); }
 .result .chip i { font-style: normal; color: var(--muted); }
 
 .sites { list-style: none; padding: 0; display: grid; gap: 6px; max-width: 520px; }
-.sites li { display: flex; justify-content: space-between; align-items: center; }
+.sites li { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.sites .site { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-width: 0; }
+.sites .scopes { display: flex; flex-wrap: wrap; gap: 4px; }
+.sites .chip { font-size: 12px; padding: 1px 4px 1px 7px; border-radius: 4px; background: var(--hover); overflow-wrap: anywhere; }
+.sites .chip .x { border: 0; background: none; color: var(--muted); cursor: pointer; padding: 0 3px; font-size: 13px; }
 #s-form { max-width: 520px; margin-bottom: 12px; } #s-form input { flex: 1; width: auto; }
 
 @media (max-width: 760px) {

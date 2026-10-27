@@ -40,6 +40,9 @@ After pulling changes, press the reload icon on the extension card.
 - On any page: toolbar icon → **Scan this page**.
 - Toggle **Always scan <site>** in the popup (or add sites under *Settings → Sites*) to scan automatically.
   Chrome asks for read permission per site; nothing is requested up front.
+- To auto-scan only some pages of a site, open one of them, turn on **Always scan** and pick **Only pages like this one**,
+  then tick which parts of the address must match (e.g. `/torrents.php` and `action=details`). Other pages on that
+  site are only rated when you press **Scan**.
 - The popup lists the best releases on the page; click one to scroll to it.
 - Switch profiles from the popup (e.g. one per room, or one per preferred dub language).
 
@@ -75,6 +78,7 @@ src/settings.js    chrome.storage helpers, site permissions
 src/content.js     page scanner: marks titles with data attributes, hover tooltip
 src/content.css    colours, dot, star and row tint keyed on those attributes
 src/background.js  auto-scan registration per allowed site, toolbar counter
+src/auto.js        flags the auto-scan script so content.js honours page scopes
 popup/  options/   UI
 tests/             node --test tests/
 ```

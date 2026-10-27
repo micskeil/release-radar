@@ -242,18 +242,47 @@
   // ------------------------------------------------------------------ sites
   async function renderSites() {
     const hosts = await RR.autoHosts();
+    settings.scopes = settings.scopes || {};
     const list = $('#s-list');
     if (!hosts.length) { list.replaceChildren(h('li', { class: 'muted' }, 'No sites yet. Add one above, or use the toolbar popup on the site.')); return; }
-    list.replaceChildren(...hosts.map((host) => h('li', { class: 'card' },
-      h('span', {}, host),
-      h('button', { class: 'btn small danger', onclick: async () => { await chrome.permissions.remove({ origins: RR.hostPatterns(host) }); renderSites(); } }, 'Remove'))));
+    const setScopes = (host, scopes) => {
+      if (scopes.length) settings.scopes[host] = scopes; else delete settings.scopes[host];
+      save(true);
+      renderSites();
+    };
+    list.replaceChildren(...hosts.map((host) => {
+      const scopes = settings.scopes[host] || [];
+      return h('li', { class: 'card' },
+        h('div', { class: 'site' },
+          h('span', {}, host),
+          h('span', { class: 'scopes' }, scopes.length
+            ? scopes.map((sc) => h('span', { class: 'chip', title: sc }, RR.describeScope(sc),
+              h('button', { class: 'x', title: scopes.length > 1 ? 'Remove' : 'Remove (the whole site is scanned again)', onclick: () => setScopes(host, scopes.filter((x) => x !== sc)) }, '×')))
+            : h('span', { class: 'muted small' }, 'All pages'))),
+        h('button', { class: 'btn small danger', onclick: async () => {
+          await chrome.permissions.remove({ origins: RR.hostPatterns(host) });
+          delete settings.scopes[host];
+          save(true);
+          renderSites();
+        } }, 'Remove'));
+    }));
   }
   $('#s-form').addEventListener('submit', async (e) => {
     e.preventDefault();
-    const patterns = RR.hostPatterns($('#s-host').value);
-    if (!patterns) { flash('Enter a domain like example.org'); return; }
-    const ok = await chrome.permissions.request({ origins: patterns });
-    if (ok) $('#s-host').value = '';
+    const site = RR.parseSite($('#s-host').value);
+    if (!site) { flash('Enter a domain like example.org, optionally with a path or query'); return; }
+    const ok = await chrome.permissions.request({ origins: RR.hostPatterns(site.host) });
+    if (ok) {
+      settings.scopes = settings.scopes || {};
+      const scopes = settings.scopes[site.host] || [];
+      // A bare domain means the whole site. A pasted page address is trimmed like the popup does it:
+      // path + first parameter, item ids dropped.
+      if (site.scope) site.scope = RR.scopeFromParts(RR.scopeParts('https://' + site.host + site.scope));
+      if (!site.scope) delete settings.scopes[site.host];
+      else if (!scopes.includes(site.scope)) settings.scopes[site.host] = [...scopes, site.scope];
+      await save(true);
+      $('#s-host').value = '';
+    }
     renderSites();
   });
 

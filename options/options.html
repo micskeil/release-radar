@@ -125,8 +125,10 @@
       <h1>Sites</h1>
       <p class="lead">On any page you can click the toolbar icon and press <b>Scan this page</b>. Sites listed here are scanned automatically on every visit.
         Chrome asks for permission to read each site once.</p>
+      <p class="muted small">To auto-scan only some pages of a site, open one of those pages, click the toolbar icon and choose
+        <b>Only pages like this one</b>. You can also paste a page address below, e.g. <code>example.org/browse?cat=movies</code>.</p>
       <form id="s-form" class="row">
-        <input id="s-host" placeholder="example.org">
+        <input id="s-host" placeholder="example.org or example.org/browse?cat=movies">
         <button class="btn primary">Add site</button>
       </form>
       <ul id="s-list" class="sites"></ul>

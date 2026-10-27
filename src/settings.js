@@ -7,6 +7,7 @@
     const { settings } = await chrome.storage.local.get('settings');
     if (settings && Array.isArray(settings.profiles) && settings.profiles.length) {
       settings.display = Object.assign({}, RR.DEFAULT_DISPLAY, settings.display || {});
+      settings.scopes = settings.scopes || {};
       if (!settings.profiles.some((p) => p.id === settings.activeProfileId)) settings.activeProfileId = settings.profiles[0].id;
       if ((settings.rulesVersion || 1) < RR.RULES_VERSION) {
         // Rule set improved: rebuild profiles the user never hand-edited from their setup answers.
@@ -37,6 +38,13 @@
     return [`*://${h}/*`, `*://*.${h}/*`];
   }
 
+  /** Page scopes for a hostname (subdomains share their site's scopes); [] = whole site. */
+  function scopesFor(settings, hostname) {
+    const h = String(hostname).toLowerCase().replace(/^www\./, '');
+    const key = Object.keys((settings && settings.scopes) || {}).find((k) => h === k || h.endsWith('.' + k));
+    return key ? settings.scopes[key] : [];
+  }
+
   /** Granted optional origins → list of hosts. */
   async function autoHosts() {
     const { origins = [] } = await chrome.permissions.getAll();
@@ -48,5 +56,5 @@
     return [...hosts].sort();
   }
 
-  Object.assign(RR, { loadSettings, saveSettings, activeProfile, hostPatterns, autoHosts });
+  Object.assign(RR, { loadSettings, saveSettings, activeProfile, hostPatterns, scopesFor, autoHosts });
 })(globalThis);

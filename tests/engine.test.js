@@ -116,3 +116,37 @@ test('presets are generic and build valid profiles', () => {
   assert.equal(E.evaluate('Movie.2024.2160p.WEB-DL.DDP5.1.Atmos.DV.H.265-GRP', samsung).verdict, 'bad');
   assert.equal(D.defaultSettings().profiles.length, 1);
 });
+
+test('site entries split into host and page scope', () => {
+  assert.deepEqual(E.parseSite('https://www.Example.org/browse/?cat=movies#top'), { host: 'example.org', scope: '/browse?cat=movies' });
+  assert.deepEqual(E.parseSite('example.org'), { host: 'example.org', scope: '' });
+  assert.deepEqual(E.parseSite('example.org?cat=4'), { host: 'example.org', scope: '?cat=4' });
+  assert.equal(E.parseSite('localhost'), null);
+  assert.equal(E.parseSite('not a site'), null);
+});
+
+test('inScope matches path segments and query params', () => {
+  assert.ok(E.inScope('https://x.org/anything', []));
+  assert.ok(E.inScope('https://x.org/browse', ['/browse']));
+  assert.ok(E.inScope('https://x.org/browse/2?p=1', ['/browse']));
+  assert.ok(!E.inScope('https://x.org/browser', ['/browse']));
+  assert.ok(E.inScope('https://x.org/t.php?cat=movies&p=2', ['?cat']));
+  assert.ok(E.inScope('https://x.org/t.php?cat=Movies', ['?cat=movies']));
+  assert.ok(!E.inScope('https://x.org/t.php?cat=tv', ['?cat=movies']));
+  assert.ok(E.inScope('https://x.org/search?q=dune', ['/search?q']));
+  assert.ok(!E.inScope('https://x.org/search', ['/search?q']));
+  assert.ok(E.inScope('https://x.org/top', ['/browse', '/top']));
+});
+
+test('scope parts built from the current page', () => {
+  const parts = E.scopeParts('https://ncore.pro/torrents.php?action=details&id=4255192');
+  assert.deepEqual(parts, [{ part: '/torrents.php', on: true }, { part: 'action=details', on: true }, { part: 'id=4255192', on: false }]);
+  const scope = E.scopeFromParts(parts);
+  assert.equal(scope, '/torrents.php?action=details');
+  assert.ok(E.inScope('https://ncore.pro/torrents.php?id=1&action=details', [scope]));
+  assert.ok(!E.inScope('https://ncore.pro/torrents.php?action=browse', [scope]));
+  assert.ok(E.inScope('https://x.org/Browse/2?CAT=Movies', ['/browse?cat=movies']));
+  assert.equal(E.describeScope(scope), 'torrents.php · action is details');
+  assert.equal(E.describeScope('/browse?cat'), 'browse and below · has cat');
+  assert.deepEqual(E.scopeParts('https://x.org/'), []);
+});

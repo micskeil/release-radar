@@ -14,6 +14,7 @@
  *   <html data-rr-color data-rr-dotmode …> switches display options on and off
  *
  * Safe to inject more than once: a second injection just rescans.
+ * On auto-scan sites with page scopes, pages outside the scopes are left alone until the user scans.
  */
 (function () {
   'use strict';
@@ -29,6 +30,10 @@
   /** @type {{name:string, container:Element, dotEl:Element, row:Element|null, result:any}[]} */
   const entries = [];
   const entryOf = new WeakMap(); // container → entry
+  // Auto-scan (registered script, flagged by auto.js) only rates pages inside the site's scopes;
+  // a scan the user starts from the toolbar always runs.
+  let manual = !globalThis.__rrAuto;
+  const active = () => manual || RR.inScope(location.href, RR.scopesFor(settings, location.hostname));
 
   // ---------------------------------------------------------------- tooltip (shadow DOM, immune to site CSS)
   const tipHost = document.createElement('div');
@@ -205,7 +210,7 @@
   }
 
   function scan(root) {
-    if (!profile) return;
+    if (!profile || !active()) return;
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
       acceptNode(n) {
         const len = n.nodeValue.length;
@@ -280,7 +285,7 @@
         const issues = e.result.results.filter((r) => r.rating !== 'perfect').map((r) => `${r.category}: ${r.label}`);
         return { title: e.title, count: new Set(group.map((g) => g.name)).size, name: e.name, verdict: e.result.verdict, score: e.result.score, issues, idx: entries.indexOf(e) };
       }).sort((a, b) => b.count - a.count || b.score - a.score).slice(0, 5);
-      reply({ counts: counts(), total: uniq.size, top, titles, profile: profile && profile.name });
+      reply({ counts: counts(), total: uniq.size, top, titles, profile: profile && profile.name, paused: !active() });
     } else if (msg.type === 'rr:scrollTo') {
       const e = entries[msg.idx];
       if (e) {
@@ -301,9 +306,10 @@
     settings.display = Object.assign({}, RR.DEFAULT_DISPLAY, settings.display || {});
     profile = RR.activeProfile(settings);
     reevaluate();
+    scan(document.body);
   });
 
-  window.__releaseRadar = { rescan: () => scan(document.body) };
+  window.__releaseRadar = { rescan: () => { manual = true; scan(document.body); } };
 
   RR.loadSettings().then((s) => {
     settings = s;

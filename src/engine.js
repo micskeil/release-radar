@@ -228,7 +228,89 @@
     return out.join(' ').toLowerCase().replace(/[^\p{L}\p{N} ]+/gu, ' ').replace(/\s+/g, ' ').trim();
   }
 
-  const api = { evaluate, titleOf, compilePattern, patternError, keywordSource, looksLikeRelease, RATING_SCORE, RATINGS };
+  /**
+   * Split a site entry typed by the user into host and optional page scope.
+   * "www.example.org/browse?cat=movies" → { host: 'example.org', scope: '/browse?cat=movies' }.
+   * "example.org" → { host: 'example.org', scope: '' }. Returns null for anything that isn't a domain.
+   */
+  function parseSite(input) {
+    const m = /^([a-z0-9.-]+)(?::\d+)?([/?].*)?$/.exec(String(input || '').trim().toLowerCase().replace(/^[a-z]+:\/\//, '').replace(/#.*$/, ''));
+    if (!m) return null;
+    const host = m[1].replace(/^www\./, '');
+    if (!/^[a-z0-9.-]+\.[a-z0-9-]+$/.test(host)) return null;
+    let [path, query = ''] = (m[2] || '').split('?');
+    path = path.replace(/\/+$/, '');
+    query = query.split('&').filter(Boolean).join('&');
+    return { host, scope: path + (query ? '?' + query : '') };
+  }
+
+  /**
+   * Whether a URL falls inside any of a site's scopes. No scopes = the whole site.
+   * Scope "/browse" matches /browse and anything below it (/browse/2), not /browser.
+   * Scope "?cat" needs a cat parameter; "?cat=movies" needs that value. "/search?q" needs both.
+   */
+  function inScope(url, scopes) {
+    if (!scopes || !scopes.length) return true;
+    let u;
+    try { u = new URL(url); } catch (_) { return false; }
+    const path = u.pathname.toLowerCase().replace(/\/+$/, '');
+    const params = [...u.searchParams].map(([k, v]) => [k.toLowerCase(), v.toLowerCase()]);
+    return scopes.some((scope) => {
+      const [p, q = ''] = scope.split('?');
+      if (p && path !== p && !path.startsWith(p + '/')) return false;
+      return q.split('&').filter(Boolean).every((pair) => {
+        const i = pair.indexOf('=');
+        if (i < 0) return params.some(([k]) => k === pair);
+        return params.some(([k, v]) => k === pair.slice(0, i) && v === pair.slice(i + 1));
+      });
+    });
+  }
+
+  /**
+   * A page URL as tickable scope parts, for building a scope from the page the user is on.
+   * The path and the first parameter that isn't an item id start ticked.
+   * "/torrents.php?action=details&id=4255192" →
+   *   [{ part: '/torrents.php', on: true }, { part: 'action=details', on: true }, { part: 'id=4255192', on: false }]
+   */
+  function scopeParts(url) {
+    const u = new URL(url);
+    const out = [];
+    const path = u.pathname.toLowerCase().replace(/\/+$/, '');
+    if (path) out.push({ part: path, on: true });
+    let picked = false;
+    const seen = new Set();
+    for (const [k, v] of u.searchParams) {
+      const part = (v ? `${k}=${v}` : k).toLowerCase();
+      if (!k || seen.has(part)) continue;
+      seen.add(part);
+      const idLike = /^[\d-]+$|^[0-9a-f]{12,}$/i.test(v);
+      out.push({ part, on: !picked && !idLike });
+      if (!idLike) picked = true;
+    }
+    return out;
+  }
+
+  /** Ticked scope parts → scope string ("/torrents.php?action=details"). */
+  function scopeFromParts(parts) {
+    const on = parts.filter((p) => p.on).map((p) => p.part);
+    const path = on.find((p) => p.startsWith('/')) || '';
+    const query = on.filter((p) => !p.startsWith('/')).join('&');
+    return path + (query ? '?' + query : '');
+  }
+
+  /** Scope → plain words: "/torrents.php?action=details" → "torrents.php · action is details". */
+  function describeScope(scope) {
+    const [p, q = ''] = String(scope).split('?');
+    const words = [];
+    if (p) words.push(p.replace(/^\//, '') + (/\.\w+$/.test(p) ? '' : ' and below'));
+    for (const pair of q.split('&').filter(Boolean)) {
+      const i = pair.indexOf('=');
+      words.push(i < 0 ? `has ${pair}` : `${pair.slice(0, i)} is ${pair.slice(i + 1)}`);
+    }
+    return words.join(' · ') || 'all pages';
+  }
+
+  const api = { evaluate, titleOf, compilePattern, patternError, keywordSource, looksLikeRelease, parseSite, inScope, scopeParts, scopeFromParts, describeScope, RATING_SCORE, RATINGS };
   root.ReleaseRadar = Object.assign(root.ReleaseRadar || {}, api);
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this);

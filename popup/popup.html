@@ -37,6 +37,13 @@
     <input type="checkbox" id="auto">
     <span>Always scan <b id="host"></b></span>
   </label>
+  <div id="scopeBox" class="scopebox" hidden>
+    <label class="switch"><input type="radio" name="scope" value="all"> All pages</label>
+    <label class="switch"><input type="radio" name="scope" value="only"> Only pages like this one:</label>
+    <div id="parts" class="parts"></div>
+    <ul id="rules" class="rules"></ul>
+    <div id="scopeSummary" class="summary"></div>
+  </div>
 
   <footer class="legend">
     <span><i class="dot perfect"></i>Best match</span>

@@ -316,7 +316,7 @@
 
   function defaultSettings() {
     const p1 = buildProfile(Object.assign({ id: 'p-default' }, PRESETS[0].answers, { name: 'My setup' }));
-    return { version: 1, rulesVersion: RULES_VERSION, activeProfileId: p1.id, profiles: [p1], sites: [], display: Object.assign({}, DEFAULT_DISPLAY), setupDone: false };
+    return { version: 1, rulesVersion: RULES_VERSION, activeProfileId: p1.id, profiles: [p1], sites: [], scopes: {}, display: Object.assign({}, DEFAULT_DISPLAY), setupDone: false };
   }
 
   const presetAnswers = (key) => (PRESETS.find((p) => p.key === key) || PRESETS[0]).answers;

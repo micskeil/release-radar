@@ -1,4 +1,4 @@
-/* Release Radar — service worker: auto-scan registrations, toolbar counts, first-run setup. */
+/* PlayFit — service worker: auto-scan registrations, toolbar counts, first-run setup. */
 importScripts('engine.js', 'defaults.js', 'settings.js');
 const RR = globalThis.ReleaseRadar;
 const SCRIPT_ID = 'rr-auto';
@@ -49,7 +49,7 @@ chrome.runtime.onMessage.addListener((msg, sender, reply) => {
     const color = perfect ? '#16a34a' : ok ? '#ca8a04' : '#dc2626';
     chrome.action.setBadgeText({ tabId: sender.tab.id, text: total && (perfect || ok) ? text : total ? '0' : '' });
     chrome.action.setBadgeBackgroundColor({ tabId: sender.tab.id, color });
-    chrome.action.setTitle({ tabId: sender.tab.id, title: `Release Radar: ${perfect} best, ${ok} ok, ${bad} skip` });
+    chrome.action.setTitle({ tabId: sender.tab.id, title: `PlayFit: ${perfect} best, ${ok} ok, ${bad} skip` });
   } else if (msg.type === 'rr:inject') {
     injectInto(msg.tabId).then(() => reply({ ok: true }), (e) => reply({ ok: false, error: e.message }));
     return true;

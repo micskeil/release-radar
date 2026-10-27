@@ -1,4 +1,4 @@
-/* Release Radar — settings persistence (chrome.storage.local). */
+/* PlayFit — settings persistence (chrome.storage.local). */
 (function (root) {
   'use strict';
   const RR = root.ReleaseRadar;

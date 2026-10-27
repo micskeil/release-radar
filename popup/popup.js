@@ -21,7 +21,7 @@
   let url;
   try { url = new URL(tab.url); } catch (_) { url = null; }
   if (!url || !/^https?:$/.test(url.protocol)) {
-    $('statusText').textContent = 'Release Radar works on regular web pages only.';
+    $('statusText').textContent = 'PlayFit works on regular web pages only.';
     return;
   }
 

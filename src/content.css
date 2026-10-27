@@ -1,5 +1,5 @@
 /*
- * Release Radar page styles. Nothing here creates layout boxes: the dot is a text glyph
+ * PlayFit page styles. Nothing here creates layout boxes: the dot is a text glyph
  * in ::before followed by a no-break space, so it stays glued to the title and can't
  * push it onto a new line, even inside no-wrap columns.
  */

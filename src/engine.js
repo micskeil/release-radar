@@ -1,5 +1,5 @@
 /*
- * Release Radar — rule engine.
+ * PlayFit — rule engine.
  * Pure functions, no DOM. Loaded as a classic script in content scripts,
  * popup and options page, and via require() in Node tests.
  *

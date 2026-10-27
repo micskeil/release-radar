@@ -1,4 +1,4 @@
-# Release Radar
+# PlayFit
 
 Chrome / Brave / Edge extension (Manifest V3) that colour-codes video release names on any web page
 according to what **your** playback chain can actually play.

@@ -1,36 +1,36 @@
-# Chrome Web Store listing — Release Radar
+# Chrome Web Store listing — PlayFit
 
 ## Name
-Release Radar
+PlayFit – Release Format Checker
 
 ## Summary (≤132 chars)
-See at a glance which video release plays perfectly on your TV, player and sound system — Dolby Vision, HDR, Atmos and more.
+See at a glance whether a video release’s resolution, HDR and audio formats suit your TV, player and sound system.
 
 ## Category
 Tools
 
 ## Description
-Release names like `Movie.2024.2160p.WEB-DL.DDP5.1.Atmos.DV.HDR.H.265` pack a lot of format detail — but whether a given file actually plays well depends on your own gear. A streaming box that can't bitstream TrueHD loses Atmos; a TV without Dolby Vision shows wrong colours on DV-only files; some players can't handle Dolby Vision profile 7 at all.
+Release names like 2160p.WEB-DL.DDP5.1.Atmos.DV.H.265 pack in a lot of format detail. Whether a file actually plays well depends on your own gear. A streaming box that can’t bitstream TrueHD loses Atmos, a TV without Dolby Vision shows wrong colours on DV-only files, and some players can’t handle DV profile 7 at all.
 
-Release Radar reads release names on any web page and colour-codes them against a profile of your setup:
+PlayFit reads release names on any page and colour-codes them against a profile of your setup:
 
-● Green — every format is a perfect fit
-● Yellow — plays, but something isn't ideal (1080p on a 4K screen, no Atmos, codec not stated…)
-● Red — won't play properly (stereo only, unsupported codec, interlaced, 3D, disc image…)
-★ BEST — the top-rated release of each title on the page
+🟢 Perfect fit: every format matches your gear
+🟡 Plays, not ideal: for example 1080p on a 4K screen, no Atmos, or codec not stated
+🔴 Won’t play properly: stereo only, unsupported codec, interlaced, 3D or a disc image
+★ BEST: the top-rated release for each title on the page
 
-Hover a name for a per-category breakdown (resolution, source, codec, HDR, audio, language, risks).
+Hover any name to see a breakdown by resolution, source, codec, HDR, audio, language and risks.
 
 FEATURES
-• Setup wizard with presets: DD+-Atmos-only streaming boxes (Google TV, Apple TV, Roku, Fire TV), LG and Samsung TV apps, full-passthrough players (Shield, CoreELEC, HTPC + receiver), 1080p + 5.1, stereo
-• Fully editable rules with a simple pattern syntax, live test box
-• Preferred audio languages, release groups to prefer or avoid
-• Multiple profiles (e.g. one per room), switch from the toolbar
-• Best release per title, with an explanation when nothing is a perfect match
-• Works on any layout: tables, lists, grids — nothing is inserted into the page
+• Setup wizard with presets for Google TV, Apple TV, Roku, Fire TV, LG and Samsung TV apps, Shield, CoreELEC, HTPC with receiver, 1080p 5.1, and stereo
+• Editable rules with a simple pattern syntax and a live test box
+• Preferred audio languages, plus release groups to favour or avoid
+• Multiple profiles, such as one per room, switchable from the toolbar
+• Picks the best release per title and explains why when nothing is a perfect match
+• Works on tables, lists and grids, and never inserts anything into the page
 
 PRIVACY
-No data collection, no network requests, no account. Sites are only read when you scan them or enable auto-scan for them; access is requested per site and can be revoked any time. Open source (MIT).
+No data collection, no network requests and no account. A site is read only when you scan it or turn on auto-scan for it. Access is requested per site and can be revoked at any time. Open source (MIT).
 
 ## Single purpose
 Rates video release names shown on web pages against the user's own playback setup and colour-codes them.

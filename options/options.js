@@ -291,7 +291,7 @@
         settings.activeProfileId = p.id;
         msg.textContent = `Imported profile “${p.name}” and made it active.`;
       } else {
-        throw new Error('not a Release Radar export');
+        throw new Error('not a PlayFit export');
       }
       save(true); renderAll();
     } catch (err) {

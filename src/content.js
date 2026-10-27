@@ -1,5 +1,5 @@
 /*
- * Release Radar — content script.
+ * PlayFit — content script.
  * Finds release-name text on the page and rates it with the active profile.
  *
  * It never inserts elements into the page's layout. It only sets data attributes on

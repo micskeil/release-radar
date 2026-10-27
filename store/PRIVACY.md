@@ -1,6 +1,6 @@
-# Release Radar — Privacy Policy
+# PlayFit — Privacy Policy
 
-Release Radar does not collect, transmit, sell or share any personal data.
+PlayFit does not collect, transmit, sell or share any personal data.
 
 - **Settings** (profiles, rules, site list, display options) are stored with `chrome.storage.local` in your own browser. They never leave your device unless you export them yourself under *Settings → Backup*.
 - **Page content** is read only on pages you scan (toolbar button) or sites you explicitly enable for auto-scan. Release names are rated locally in the page; nothing is sent anywhere.

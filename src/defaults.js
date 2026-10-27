@@ -1,5 +1,5 @@
 /*
- * Release Radar — default profiles and the setup-wizard profile builder.
+ * PlayFit — default profiles and the setup-wizard profile builder.
  * buildProfile(answers) turns a handful of "what can your gear play" answers
  * into a full rule profile, which the user can then fine-tune in the editor.
  */

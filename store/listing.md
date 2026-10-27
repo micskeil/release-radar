@@ -26,6 +26,7 @@ FEATURES
 • Editable rules with a simple pattern syntax and a live test box
 • Preferred audio languages, plus release groups to favour or avoid
 • Multiple profiles, such as one per room, switchable from the toolbar
+• Auto-scan whole sites or only the pages you pick, such as a site’s details pages
 • Picks the best release per title and explains why when nothing is a perfect match
 • Works on tables, lists and grids, and never inserts anything into the page
 

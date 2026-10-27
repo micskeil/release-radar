@@ -30,6 +30,11 @@ FEATURES
 • Picks the best release per title and explains why when nothing is a perfect match
 • Works on tables, lists and grids, and never inserts anything into the page
 
+WHAT’S NEW IN 1.0.3
+• Choose which pages of a site are scanned automatically. Open a page, click the toolbar icon, pick “Only pages like this one” and tick the parts of the address that must match
+• See and remove a site’s page rules right in the toolbar popup
+• New name (PlayFit) and new icon
+
 PRIVACY
 No data collection, no network requests and no account. A site is read only when you scan it or turn on auto-scan for it. Access is requested per site and can be revoked at any time. Open source (MIT).
 

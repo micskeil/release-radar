@@ -150,3 +150,11 @@ test('scope parts built from the current page', () => {
   assert.equal(E.describeScope('/browse?cat'), 'browse and below · has cat');
   assert.deepEqual(E.scopeParts('https://x.org/'), []);
 });
+
+test('direct-play server makes Dolby Vision-only perfect', () => {
+  const name = 'One.Night.Only.2026.2160p.MA.WEB-DL.P5.Dolby.Vision.DDP5.1.Atmos.h265.HUN-UF0971';
+  const hdr = (p) => E.evaluate(name, p).results.find((c) => c.categoryId === 'hdr').rating;
+  assert.equal(hdr(living), 'ok');
+  assert.equal(hdr(D.buildProfile(Object.assign({}, D.presetAnswers('ddp-atmos-streamer'), { server: 'direct' }))), 'perfect');
+  assert.equal(hdr(D.buildProfile(Object.assign({}, D.presetAnswers('samsung-tv-app'), { server: 'direct' }))), 'bad');
+});

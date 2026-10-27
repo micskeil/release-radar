@@ -98,7 +98,7 @@
     }
   }
 
-  function hdrOptions(hdr) {
+  function hdrOptions(hdr, server) {
     const DVHDR = 'DV & HDR, DoVi & HDR, Dolby Vision & HDR, DV & HDR10, DV & HLG';
     const DV = 'DV, DoVi, Dolby Vision, DOVI';
     const HDR10P = 'HDR10+, HDR10Plus, HDR10P';
@@ -124,7 +124,9 @@
       opt('DV + HDR10', DVHDR, 'perfect', 'Dolby Vision with HDR10 fallback (P8.1 in WEB/encodes)'),
       opt('HDR10+', HDR10P, 'perfect', 'HDR10+ dynamic metadata may be ignored; HDR10 still works'),
       opt('HDR10', HDR, 'perfect'),
-      opt('Dolby Vision only', DV, 'ok', 'WEB = profile 5: fine natively, but no HDR10 fallback if the server transcodes'),
+      server === 'direct'
+        ? opt('Dolby Vision only', DV, 'perfect', 'WEB = profile 5: plays natively, your server direct-plays it')
+        : opt('Dolby Vision only', DV, 'ok', 'WEB = profile 5: fine natively, but no HDR10 fallback if the server transcodes'),
       opt('HLG', 'HLG', 'ok'),
       opt('SDR', 'SDR', 'ok', 'No HDR'),
     ];
@@ -137,6 +139,7 @@
   /**
    * answers = {
    *   name, maxRes: '2160p'|'1080p', hdr: 'dv'|'hdr10'|'sdr', dvP7: bool,
+   *   server: 'direct'|'transcode' (Jellyfin/Plex/Emby direct-plays to this player, or may transcode),
    *   audio: 'ddp-atmos'|'full-atmos'|'surround'|'stereo',
    *   av1: bool, hi10: bool, langs: ['HUN', ...], requireLang: bool,
    *   remux: 'perfect'|'ok'|'bad', avoidGroups: 'A, B', preferGroups: 'C, D'
@@ -191,7 +194,7 @@
 
     cats.push({
       id: 'hdr', name: 'HDR', whenMissing: a.hdr === 'sdr' ? 'ignore' : 'ok', missingNote: 'No HDR tag: SDR',
-      options: hdrOptions(a.hdr),
+      options: hdrOptions(a.hdr, a.server),
     });
 
     cats.push({
@@ -252,7 +255,7 @@
       title: 'Streaming box, DD+ Atmos only',
       description: 'Google TV Streamer, Chromecast, Apple TV 4K, Roku, Fire TV with the stock player. Real Atmos only from DD+; TrueHD and DTS-HD are downgraded.',
       answers: {
-        name: 'Streaming box', maxRes: '2160p', hdr: 'dv', dvP7: false, audio: 'ddp-atmos',
+        name: 'Streaming box', maxRes: '2160p', hdr: 'dv', dvP7: false, server: 'transcode', audio: 'ddp-atmos',
         av1: false, hi10: false, langs: [], requireLang: false, remux: 'ok',
         avoidGroups: DEFAULT_AVOID_GROUPS, preferGroups: '',
       },
@@ -262,7 +265,7 @@
       title: 'LG TV app (Jellyfin / Plex on webOS)',
       description: 'Dolby Vision and HDR10 play natively; DD+ Atmos goes to the soundbar over eARC. TrueHD is not bitstreamed from TV apps.',
       answers: {
-        name: 'LG TV', maxRes: '2160p', hdr: 'dv', dvP7: false, audio: 'ddp-atmos',
+        name: 'LG TV', maxRes: '2160p', hdr: 'dv', dvP7: false, server: 'transcode', audio: 'ddp-atmos',
         av1: true, hi10: false, langs: [], requireLang: false, remux: 'ok',
         avoidGroups: DEFAULT_AVOID_GROUPS, preferGroups: '',
       },
@@ -272,7 +275,7 @@
       title: 'Samsung TV app (Tizen)',
       description: 'HDR10 and HDR10+, no Dolby Vision: DV-only files show wrong colours. DD+ Atmos over eARC.',
       answers: {
-        name: 'Samsung TV', maxRes: '2160p', hdr: 'hdr10', dvP7: false, audio: 'ddp-atmos',
+        name: 'Samsung TV', maxRes: '2160p', hdr: 'hdr10', dvP7: false, server: 'transcode', audio: 'ddp-atmos',
         av1: true, hi10: false, langs: [], requireLang: false, remux: 'ok',
         avoidGroups: DEFAULT_AVOID_GROUPS, preferGroups: '',
       },
@@ -282,7 +285,7 @@
       title: 'Full passthrough: Shield, Ugoos/CoreELEC, HTPC + AV receiver',
       description: 'TrueHD Atmos, DTS:X and Dolby Vision profile 7 all play. REMUX is welcome.',
       answers: {
-        name: 'Full passthrough', maxRes: '2160p', hdr: 'dv', dvP7: true, audio: 'full-atmos',
+        name: 'Full passthrough', maxRes: '2160p', hdr: 'dv', dvP7: true, server: 'direct', audio: 'full-atmos',
         av1: false, hi10: false, langs: [], requireLang: false, remux: 'perfect',
         avoidGroups: DEFAULT_AVOID_GROUPS, preferGroups: '',
       },
@@ -292,7 +295,7 @@
       title: '1080p TV + 5.1 system',
       description: 'No HDR, no Atmos. Small, compatible files.',
       answers: {
-        name: '1080p + 5.1', maxRes: '1080p', hdr: 'sdr', dvP7: false, audio: 'surround',
+        name: '1080p + 5.1', maxRes: '1080p', hdr: 'sdr', dvP7: false, server: 'transcode', audio: 'surround',
         av1: false, hi10: false, langs: [], requireLang: false, remux: 'bad',
         avoidGroups: 'YTS, YIFY, GalaxyRG', preferGroups: '',
       },
@@ -302,7 +305,7 @@
       title: 'TV speakers / laptop / headphones (stereo)',
       description: 'Audio format barely matters; favours small files.',
       answers: {
-        name: 'Stereo', maxRes: '1080p', hdr: 'hdr10', dvP7: false, audio: 'stereo',
+        name: 'Stereo', maxRes: '1080p', hdr: 'hdr10', dvP7: false, server: 'transcode', audio: 'stereo',
         av1: true, hi10: false, langs: [], requireLang: false, remux: 'bad',
         avoidGroups: '', preferGroups: '',
       },
@@ -312,7 +315,7 @@
   const DEFAULT_DISPLAY = { colorText: true, showDot: true, tintRows: true, dimBad: true, markBest: true };
 
   // Bump when buildProfile() output changes; unedited profiles are rebuilt from their answers on load.
-  const RULES_VERSION = 3;
+  const RULES_VERSION = 4;
 
   function defaultSettings() {
     const p1 = buildProfile(Object.assign({ id: 'p-default' }, PRESETS[0].answers, { name: 'My setup' }));

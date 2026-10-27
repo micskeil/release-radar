@@ -51,6 +51,13 @@
           <label class="check"><input type="checkbox" id="w-dvP7"> My player handles UHD BluRay Dolby Vision (profile 7) <small>(Nvidia Shield, Ugoos, Zidoo)</small></label>
         </fieldset>
 
+        <fieldset><legend>Server</legend>
+          <label class="radio"><input type="radio" name="server" value="direct"> Jellyfin, Plex or Emby at home, <b>direct play</b> to this player
+            <small>(or local files / USB). Dolby Vision-only releases are fine.</small></label>
+          <label class="radio"><input type="radio" name="server" value="transcode"> The server <b>may transcode</b>
+            <small>(remote streaming, bandwidth limits, weak player). Dolby Vision-only loses HDR when transcoded.</small></label>
+        </fieldset>
+
         <fieldset><legend>Sound</legend>
           <label class="radio"><input type="radio" name="audio" value="ddp-atmos"> Atmos system, but the player only passes <b>DD+ Atmos</b>
             <small>(Google TV Streamer, Chromecast, Fire TV, Apple TV, TV apps). TrueHD and DTS-HD lose Atmos.</small></label>

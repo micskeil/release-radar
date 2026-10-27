@@ -72,7 +72,7 @@
 
   function fillWizard(a) {
     $('#w-name').value = a.name || '';
-    for (const key of ['maxRes', 'hdr', 'audio', 'remux']) {
+    for (const key of ['maxRes', 'hdr', 'server', 'audio', 'remux']) {
       for (const r of $$(`input[name=${key}]`)) r.checked = r.value === a[key];
     }
     $('#w-dvP7').checked = !!a.dvP7;
@@ -88,7 +88,7 @@
     const radio = (n) => ($(`input[name=${n}]:checked`) || {}).value;
     return {
       name: $('#w-name').value.trim() || 'My setup',
-      maxRes: radio('maxRes'), hdr: radio('hdr'), audio: radio('audio'), remux: radio('remux'),
+      maxRes: radio('maxRes'), hdr: radio('hdr'), server: radio('server') || 'transcode', audio: radio('audio'), remux: radio('remux'),
       dvP7: $('#w-dvP7').checked, av1: $('#w-av1').checked, hi10: $('#w-hi10').checked,
       requireLang: $('#w-requireLang').checked,
       langs: $$('input:checked', langBox).map((c) => c.value),

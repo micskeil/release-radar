@@ -185,7 +185,7 @@
     if (!text) return false;
     const loose = !!(opts && opts.loose);
     const t = text.trim();
-    if (t.length < 12 || t.length > (loose ? 600 : 300)) return false;
+    if (t.length < (loose ? 8 : 12) || t.length > (loose ? 600 : 300)) return false;
     if ((t.match(/\s/g) || []).length > (loose ? 100 : 24)) return false;
     const hits = new Set((t.match(HINT_RE) || []).map((h) => h.toLowerCase()));
     if (hits.size >= 2) return true;
@@ -194,6 +194,8 @@
       // "REPACK", "WEB", "DV", "FLAC" alone are common in game and music names.
       const [only] = hits;
       if (!STRONG_RE.test(only)) return false;
+      // Link text like "A séf BD50" (nCore's local-title names): a disc or resolution tag is enough.
+      if (loose && /^(bd25|bd50|bdremux|remux|2160p|1080p|720p)$/.test(only)) return true;
       const dotted = (t.match(/[._]/g) || []).length >= 3 && !/\s/.test(t);
       const year = /(?<!\d)(19|20)\d{2}(?!\d)/.test(t);
       return dotted || year;

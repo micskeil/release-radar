@@ -158,3 +158,10 @@ test('direct-play server makes Dolby Vision-only perfect', () => {
   assert.equal(hdr(D.buildProfile(Object.assign({}, D.presetAnswers('ddp-atmos-streamer'), { server: 'direct' }))), 'perfect');
   assert.equal(hdr(D.buildProfile(Object.assign({}, D.presetAnswers('samsung-tv-app'), { server: 'direct' }))), 'bad');
 });
+
+test('short local-title link names with a disc tag count as releases', () => {
+  assert.ok(E.looksLikeRelease('A séf BD50', { loose: true }));
+  assert.ok(!E.looksLikeRelease('A séf BD50'));
+  assert.ok(!E.looksLikeRelease('Watch now', { loose: true }));
+  assert.ok(!E.looksLikeRelease('HDTV news', { loose: true }));
+});

@@ -128,9 +128,11 @@
       if (full.length <= 600 && full.length > text.length) text = full;
     }
     // Truncated link text ("Dune.Part.Two.2024.2160p.WEB-D...") → use the title attribute.
-    const title = (link && link.getAttribute('title')) || parent.getAttribute('title') || '';
-    if (title && title.length > text.length && RR.looksLikeRelease(title, { loose: true }) &&
-        (/(\.\.\.|…)$/.test(text) || title.startsWith(text.replace(/(\.\.\.|…)$/, '').slice(0, 10)))) text = title.trim();
+    // Compare without the ellipsis: nCore cuts "…-SPARKS" to "…-SPARK..." (same length as the title).
+    const title = ((link && link.getAttribute('title')) || parent.getAttribute('title') || '').trim();
+    const cut = text.replace(/(\.\.\.|…)$/, '');
+    if (title && title.length > cut.length && RR.looksLikeRelease(title, { loose: true }) &&
+        (cut !== text || title.startsWith(cut.slice(0, 10)))) text = title;
     // Links and headings may carry long descriptive titles (rutracker); plain text must look like a bare release name.
     const loose = !!link || /^H[1-3]$/.test(parent.tagName);
     if (!RR.looksLikeRelease(text, { loose })) return null;

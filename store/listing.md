@@ -31,6 +31,9 @@ FEATURES
 • Works on tables, lists and grids, and never inserts anything into the page
 
 RELEASE NOTES
+1.0.6
+• Better reading of shortened release names (full name taken from the link) and short local-title names like “Title BD50”
+
 1.0.5
 • New Profiles page: create, rename, switch, duplicate, export and delete profiles in one place, plus import and backup
 • Version number shown in the popup and settings

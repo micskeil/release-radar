@@ -151,8 +151,7 @@
 
   function renderRules() {
     const p = profile();
-    $('#r-name').value = p.name;
-    $('#r-del').disabled = settings.profiles.length < 2;
+    $('#r-name').textContent = p.name;
     const box = $('#categories');
     box.replaceChildren(...p.categories.map((cat, ci) => {
       const rows = cat.options.map((o, oi) => {
@@ -191,21 +190,41 @@
     }));
   }
 
-  $('#r-name').addEventListener('input', (e) => { profile().name = e.target.value; save(); renderProfileSelect(); });
-  $('#r-dup').addEventListener('click', () => {
-    const copy = structuredClone(profile());
-    copy.id = 'p-' + Math.random().toString(36).slice(2, 9);
-    copy.name += ' (copy)';
-    settings.profiles.push(copy);
-    settings.activeProfileId = copy.id;
-    save(true); renderAll();
-  });
-  $('#r-del').addEventListener('click', () => {
-    const p = profile();
-    if (settings.profiles.length < 2 || !confirm(`Delete profile “${p.name}”?`)) return;
-    settings.profiles = settings.profiles.filter((x) => x !== p);
-    settings.activeProfileId = settings.profiles[0].id;
-    save(true); renderAll();
+  // ------------------------------------------------------------------ profiles
+  const newId = () => 'p-' + Math.random().toString(36).slice(2, 9);
+  function renderProfiles() {
+    $('#p-list').replaceChildren(...settings.profiles.map((p) => {
+      const active = p.id === settings.activeProfileId;
+      const use = () => { settings.activeProfileId = p.id; save(true); renderAll(); };
+      return h('li', { class: 'card' + (active ? ' active' : '') },
+        h('input', { class: 'pname', value: p.name, title: 'Rename', oninput: (e) => { p.name = e.target.value; save(true); renderProfileSelect(); } }),
+        active ? h('span', { class: 'badge' }, 'Active') : h('button', { class: 'btn small', onclick: use }, 'Use'),
+        h('button', { class: 'btn small', onclick: () => { if (!active) use(); showTab('rules'); } }, 'Edit rules'),
+        h('button', { class: 'btn small', onclick: () => {
+          if (!active) use();
+          fillWizard(p.answers || RR.PRESETS[0].answers);
+          showTab('setup');
+        } }, 'Edit setup'),
+        h('button', { class: 'btn small', onclick: () => {
+          const copy = structuredClone(p);
+          copy.id = newId();
+          copy.name += ' (copy)';
+          settings.profiles.push(copy);
+          save(true); renderAll();
+        } }, 'Duplicate'),
+        h('button', { class: 'btn small', onclick: () => download({ releaseRadarProfile: 1, profile: p }, `playfit-${slug(p.name)}.json`) }, 'Export'),
+        h('button', { class: 'btn small danger', disabled: settings.profiles.length < 2, onclick: () => {
+          if (!confirm(`Delete profile “${p.name}”?`)) return;
+          settings.profiles = settings.profiles.filter((x) => x !== p);
+          if (active) settings.activeProfileId = settings.profiles[0].id;
+          save(true); renderAll();
+        } }, 'Delete'));
+    }));
+  }
+  $('#p-new').addEventListener('click', () => {
+    fillWizard(Object.assign({}, RR.PRESETS[0].answers, { name: 'New setup' }));
+    showTab('setup');
+    $('#w-name').focus();
   });
   $('#r-addcat').addEventListener('click', () => {
     profile().categories.push({ id: 'c-' + Math.random().toString(36).slice(2, 7), name: 'New category', whenMissing: 'ignore', options: [] });
@@ -299,8 +318,7 @@
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
   const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'profile';
-  $('#b-export-active').addEventListener('click', () => download({ releaseRadarProfile: 1, profile: profile() }, `release-radar-${slug(profile().name)}.json`));
-  $('#b-export-all').addEventListener('click', () => download({ releaseRadarSettings: 1, settings }, 'release-radar-settings.json'));
+  $('#b-export-all').addEventListener('click', () => download({ releaseRadarSettings: 1, settings }, 'playfit-settings.json'));
   $('#b-import').addEventListener('change', async (e) => {
     const file = e.target.files[0];
     e.target.value = '';
@@ -315,7 +333,7 @@
         msg.textContent = `Imported ${settings.profiles.length} profiles.`;
       } else if (data.releaseRadarProfile && valid(data.profile)) {
         const p = data.profile;
-        p.id = 'p-' + Math.random().toString(36).slice(2, 9);
+        p.id = newId();
         settings.profiles.push(p);
         settings.activeProfileId = p.id;
         msg.textContent = `Imported profile “${p.name}” and made it active.`;
@@ -337,6 +355,7 @@
   // ------------------------------------------------------------------ boot
   function renderAll() {
     renderProfileSelect();
+    renderProfiles();
     renderRules();
     renderDisplay();
     if (!$('#tab-test').hidden) renderTest();
@@ -352,10 +371,12 @@
     return r;
   };
 
+  $('#version').textContent = 'PlayFit v' + chrome.runtime.getManifest().version;
   renderPresets();
   fillWizard(profile().answers || RR.PRESETS[0].answers);
   renderAll();
-  const start = (location.hash || '').slice(1);
-  showTab($('#tab-' + start) ? start : 'setup');
-  addEventListener('hashchange', () => { const t = location.hash.slice(1); if ($('#tab-' + t)) showTab(t); });
+  // #backup was the old home of export/import.
+  const tabOf = (hash) => { const t = hash.slice(1) === 'backup' ? 'profiles' : hash.slice(1); return $('#tab-' + t) ? t : null; };
+  showTab(tabOf(location.hash || '') || 'setup');
+  addEventListener('hashchange', () => { const t = tabOf(location.hash); if (t) showTab(t); });
 })();

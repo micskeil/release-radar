@@ -4,6 +4,7 @@
   const $ = (id) => document.getElementById(id);
   const FILES = ['src/engine.js', 'src/defaults.js', 'src/settings.js', 'src/content.js'];
 
+  $('version').textContent = 'v' + chrome.runtime.getManifest().version;
   $('openOptions').addEventListener('click', (e) => { e.preventDefault(); chrome.runtime.openOptionsPage(); });
 
   // Profile switcher

@@ -84,3 +84,9 @@ select.rating-bad { border-left: 4px solid var(--bad); }
   .rules thead { display: none; }
   .rules tr { border-bottom: 1px solid var(--border); padding: 6px 0; }
 }
+.version { font-size: 11px; }
+.profiles { list-style: none; padding: 0; display: grid; gap: 8px; max-width: 720px; margin: 12px 0; }
+.profiles li { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.profiles li.active { outline: 2px solid var(--accent); }
+.profiles .pname { flex: 1; min-width: 160px; font-weight: 600; }
+.profiles .badge { font-size: 11px; padding: 1px 8px; border-radius: 999px; background: var(--accent); color: var(--accent-text); }

@@ -31,6 +31,10 @@ FEATURES
 • Works on tables, lists and grids, and never inserts anything into the page
 
 RELEASE NOTES
+1.0.5
+• New Profiles page: create, rename, switch, duplicate, export and delete profiles in one place, plus import and backup
+• Version number shown in the popup and settings
+
 1.0.4
 • New setup question: home server (Jellyfin, Plex, Emby) that direct-plays makes Dolby Vision-only releases a perfect fit
 

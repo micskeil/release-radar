@@ -24,3 +24,4 @@ body.popup { width: 340px; padding: 12px; margin: 0; display: grid; gap: 10px; }
 .scopebox .rules li.current { outline: 1px solid var(--accent); }
 .scopebox .rules span { flex: 1; overflow-wrap: anywhere; }
 .scopebox .rules button { border: 0; background: none; color: var(--muted); cursor: pointer; font-size: 14px; padding: 0 2px; }
+.version { margin-top: -6px; text-align: center; font-size: 10px; color: var(--muted); }

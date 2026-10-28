@@ -202,8 +202,12 @@
       if (e.row) e.row.removeAttribute('data-rr-row-best');
     }
     if (!settings.display.markBest) return;
+    // A browse list mixes many titles with only a release or two each, so "best" means little there.
+    // Star only titles that make up a real share of the page (search results, other versions of one film).
+    const live = new Set(entries.filter((e) => e.container.isConnected).map((e) => e.name)).size;
     for (const group of titleGroups().values()) {
-      if (new Set(group.map((e) => e.name)).size < 2) continue;
+      const n = new Set(group.map((e) => e.name)).size;
+      if (n < 2 || n < live * 0.25) continue;
       for (const e of bestOf(group)) {
         e.dotEl.setAttribute('data-rr-best', '');
         if (e.row) e.row.setAttribute('data-rr-row-best', '');

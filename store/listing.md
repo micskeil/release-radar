@@ -31,6 +31,9 @@ FEATURES
 • Works on tables, lists and grids, and never inserts anything into the page
 
 RELEASE NOTES
+1.0.7
+• The ★ BEST mark only appears where it makes sense: search results and other versions of one title, not mixed browse lists
+
 1.0.6
 • Better reading of shortened release names (full name taken from the link) and short local-title names like “Title BD50”
 
